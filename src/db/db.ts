@@ -5,7 +5,7 @@ import { items } from "./schema";
 let origFetch = global.fetch;
 
 global.fetch = (...args) => {
-  console.log(args[1]!!.body);
+  // console.log(args[1]!!.body);
 
   return origFetch(...args);
 };
@@ -16,11 +16,13 @@ export const connection = connect({
   password: process.env["DATABASE_PASSWORD_DEV"],
 });
 
-export const db = drizzle(connection);
+// export const db = drizzle(connection);
 
-console.log("ORM in db.ts");
-let _items = await db.select().from(items);
-console.log("🚀 ~ _items:", _items);
+// console.log("ORM in db.ts");
+let _items = await connection.execute(
+  "select `id`, `name`, `checked`, `recurring` from `items`"
+);
+console.log("🚀 ~ db.ts: _items:", _items.rows);
 
 // migrate(db, { migrationsFolder: "./src/migrations" })
 //   .then(() => {
