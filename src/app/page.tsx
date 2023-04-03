@@ -6,33 +6,9 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 const getItems = async () => {
-  try {
-    let items = await connection.execute(
-      "select `id`, `name`, `checked`, `recurring` from `items`"
-    );
-    console.log("database-js:");
-    console.log("🚀 ~ items:", items.rows);
-  } catch (e) {
-    console.error(e);
-  }
-
-  try {
-    console.log("ORM");
-    let _items = await db.select().from(items);
-    console.log("🚀 ~ _items:", _items);
-  } catch (e) {
-    console.error(e);
-  }
-  console.log("query");
-  try {
-    let _items = await db.execute(
-      sql`select \`id\`, \`name\`, \`checked\`, \`recurring\` from \`items\``
-    );
-    console.log("🚀 ~ _items:", _items.rows);
-    return items;
-  } catch (e) {
-    console.error(e);
-  }
+  console.log("ORM in page.tsx");
+  let _items = await db.select().from(items);
+  console.log("🚀 ~ _items:", _items);
 };
 
 export default async function Home() {
