@@ -1,18 +1,17 @@
 import React, { Fragment, useState } from "react";
 import { Combobox as ComboboxBase, Transition } from "@headlessui/react";
-import type { Item } from "@prisma/client";
 import Input from "./input";
+import { Item } from "@/db/schema";
 
 interface ComboboxProps {
   options: Item[];
-  inputProps: React.ComponentPropsWithRef<typeof Input>;
+  name?: string;
 }
 
 function ComboboxComponent(
-  { options, inputProps }: ComboboxProps,
+  { options, name }: ComboboxProps,
   ref: React.Ref<HTMLInputElement>
 ) {
-  const [selected, setSelected] = useState("");
   const [query, setQuery] = useState("");
 
   const filtered = options.filter((option) => option.name.includes(query));
@@ -23,21 +22,21 @@ function ComboboxComponent(
   return (
     <>
       <ComboboxBase
-        value={selected}
-        onChange={(value) => {
-          setSelected(value);
-          setQuery(value);
-        }}
-        name="item"
+        defaultValue={""}
+        onChange={(value) => setQuery(value ?? "")}
+        name={name}
+        nullable
       >
         <div className="relative grow">
           <ComboboxBase.Input
             onChange={(event) => setQuery(event.target.value)}
             as={Input}
             ref={ref}
-            {...inputProps}
             dir="auto"
             autoComplete="off"
+            fullWidth
+            textEllipsis
+            border
           ></ComboboxBase.Input>
           <Transition
             enter="transition duration-100 ease-out"
@@ -67,11 +66,13 @@ function Option({ value }: { value: string }) {
     <ComboboxBase.Option value={value} as={Fragment}>
       {({ active, selected }) => (
         <li
-          className={`flex flex-row-reverse p-2 text-slate-800 dark:bg-slate-700 dark:text-slate-50
+          className={`flex flex-row-reverse p-2 text-slate-800 dark:text-slate-50
             ${
               active
                 ? "bg-slate-300 dark:bg-sky-300 dark:text-slate-800"
-                : selected && "bg-slate-200 dark:bg-sky-500"
+                : selected
+                ? "bg-slate-200 dark:bg-sky-500"
+                : "dark:bg-slate-700"
             }
         `}
         >

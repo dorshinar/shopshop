@@ -1,56 +1,82 @@
-import type { Item } from "@prisma/client";
-import { useSubmit, useActionData, Form } from "@remix-run/react";
-import type ShoppingListItemsResponse from "~/entities/ShoppingListItemsResponse";
+"use client";
+
 import Input from "./input";
 import { SymbolIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Checkbox } from "./checkbox";
-import { useRef } from "react";
+import { useRef, useState, useTransition } from "react";
+import { Item } from "@/db/schema";
+import { useRouter } from "next/navigation";
 
-export function ListItem({
-  item,
-  // onDragFinished,
-  disabled = false,
-  onEnter,
-}: {
+interface Props {
   item: Item;
-  // onDragFinished(e: React.PointerEvent): void;
   disabled?: boolean;
-  onEnter(): void;
-}) {
-  const submit = useSubmit();
-  const actionData = useActionData<ShoppingListItemsResponse>();
-  const lastRecurringItemId = actionData?.recurringCheckedItemId;
-  const lastCheckedItemId = actionData?.checkedItemId;
+}
 
+export function ListItem({ item, disabled = false }: Props) {
   const deleteButtonRef = useRef<HTMLButtonElement>(null);
 
-  // const controls = useDragControls();
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const [isFetching, setIsFetching] = useState(false);
+
+  const updateItem = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    let newItem = { ...item };
+
+    const checkedInput = e.currentTarget.elements.namedItem("checked");
+    if (checkedInput) {
+      newItem.checked = (checkedInput as HTMLInputElement).checked;
+    }
+
+    const recurringInput = e.currentTarget.elements.namedItem("recurring");
+    if (recurringInput) {
+      newItem.recurring = (recurringInput as HTMLInputElement).checked;
+    }
+
+    const nameInput = e.currentTarget.elements.namedItem("name");
+    if (nameInput) {
+      newItem.name = (nameInput as HTMLInputElement).value;
+    }
+
+    setIsFetching(true);
+    await fetch(`api/list/item/${item.id}`, {
+      method: "POST",
+      body: JSON.stringify(newItem),
+    });
+    setIsFetching(false);
+
+    startTransition(() => {
+      router.refresh();
+    });
+  };
+
+  const deleteItem = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    setIsFetching(true);
+    await fetch(`api/list/item/${item.id}`, {
+      method: "DELETE",
+    });
+    setIsFetching(false);
+
+    startTransition(() => {
+      router.refresh();
+    });
+  };
 
   return (
     <li
       className="mt-1 flex items-center justify-end gap-2 first:mt-0"
       aria-hidden={disabled}
-      // value={item}
-      // dragListener={false}
-      // dragControls={controls}
     >
-      <Form
-        method="post"
-        onChange={(event) => submit(event.currentTarget, { replace: true })}
-        className="flex items-center"
-        replace
-      >
+      <form method="post" onChange={updateItem} className="flex items-center">
         <Checkbox
-          defaultChecked={item.recurring ?? false}
+          defaultChecked={item.recurring}
           name="recurring"
           aria-label={`set ${item.name} as ${
             item.recurring ? "non-recurring" : "recurring"
           }`}
-          ref={
-            item.id === lastRecurringItemId
-              ? (node) => node?.focus()
-              : undefined
-          }
           disabled={disabled}
         >
           <SymbolIcon
@@ -59,14 +85,13 @@ export function ListItem({
             } transition-opacity`}
           ></SymbolIcon>
         </Checkbox>
-        <input type="hidden" name="id" value={item.id}></input>
-        <input type="hidden" name="_action" value="recurring"></input>
-      </Form>
-      <Form method="post" className="flex items-center text-center" replace>
-        <input type="hidden" name="id" value={item.id}></input>
+      </form>
+      <form
+        method="post"
+        onSubmit={deleteItem}
+        className="flex items-center text-center"
+      >
         <button
-          name="_action"
-          value="delete"
           disabled={disabled}
           aria-label={`delete ${item.name}`}
           className="grid h-11 w-11 place-items-center rounded outline-1 outline-offset-2 outline-sky-600 focus-visible:outline md:h-4 md:w-4"
@@ -74,57 +99,35 @@ export function ListItem({
         >
           <TrashIcon className="h-6 w-6 md:h-4 md:w-4"></TrashIcon>
         </button>
-      </Form>
-      <Form
+      </form>
+      <form
         method="post"
-        replace
+        onChange={updateItem}
         className="grid flex-shrink-0 flex-grow basis-20 place-items-center"
-        onChange={(event) => submit(event.currentTarget, { replace: true })}
       >
         <Input
           dir="auto"
           name="name"
           defaultValue={item.name}
           disabled={disabled}
-          onKeyDown={(event) => {
-            if (event.key === "Enter") {
-              event.preventDefault();
-              onEnter();
-            }
-            if (event.key === "Backspace" && event.currentTarget.value === "") {
-              deleteButtonRef.current?.click();
-            }
-          }}
           fullWidth
           textEllipsis
           autoComplete="off"
           secondary={item.checked}
           aria-label={`edit ${item.name} name`}
         ></Input>
-        <input type="hidden" name="id" value={item.id}></input>
-        <input type="hidden" name="_action" value="name"></input>
-      </Form>
-      <Form
-        method="post"
-        onChange={(event) => submit(event.currentTarget, { replace: true })}
-        className="flex items-center"
-        replace
-      >
+      </form>
+      <form method="post" onChange={updateItem} className="flex items-center">
         <Checkbox
-          defaultChecked={item.checked ?? false}
+          defaultChecked={item.checked}
           name="checked"
           aria-label={`toggle ${item.name} ${
             item.checked ? "unchecked" : "checked"
           }`}
-          ref={
-            item.id === lastCheckedItemId ? (node) => node?.focus() : undefined
-          }
           disabled={disabled}
           border
         ></Checkbox>
-        <input type="hidden" name="id" value={item.id}></input>
-        <input type="hidden" name="_action" value="check"></input>
-      </Form>
+      </form>
     </li>
   );
 }
