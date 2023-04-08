@@ -5,9 +5,7 @@ import Separator from "@/components/separator";
 import { RestoreRecurring } from "@/components/restore-recurring";
 import { db } from "@/db/db";
 import { items } from "@/db/schema";
-import { Inter } from "next/font/google";
 
-const inter = Inter({ subsets: ["latin"] });
 const getItems = async () => {
   return db.select().from(items);
 };
@@ -64,3 +62,6 @@ export default async function Home() {
     </>
   );
 }
+
+export const runtime = "experimental-edge";
+export const revalidate = 0;

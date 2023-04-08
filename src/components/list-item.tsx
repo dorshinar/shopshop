@@ -3,9 +3,10 @@
 import Input from "./input";
 import { SymbolIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Checkbox } from "./checkbox";
-import { useRef, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { Item } from "@/db/schema";
 import { useRouter } from "next/navigation";
+import { IconButton } from "./icon-button";
 
 interface Props {
   item: Item;
@@ -13,8 +14,6 @@ interface Props {
 }
 
 export function ListItem({ item, disabled = false }: Props) {
-  const deleteButtonRef = useRef<HTMLButtonElement>(null);
-
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [isFetching, setIsFetching] = useState(false);
@@ -70,7 +69,7 @@ export function ListItem({ item, disabled = false }: Props) {
       className="mt-1 flex items-center justify-end gap-2 first:mt-0"
       aria-hidden={disabled}
     >
-      <form method="post" onChange={updateItem} className="flex items-center">
+      <form onChange={updateItem} className="flex items-center">
         <Checkbox
           defaultChecked={item.recurring}
           name="recurring"
@@ -86,22 +85,14 @@ export function ListItem({ item, disabled = false }: Props) {
           ></SymbolIcon>
         </Checkbox>
       </form>
-      <form
-        method="post"
-        onSubmit={deleteItem}
-        className="flex items-center text-center"
-      >
-        <button
+      <form onSubmit={deleteItem} className="flex items-center text-center">
+        <IconButton
           disabled={disabled}
           aria-label={`delete ${item.name}`}
-          className="grid h-11 w-11 place-items-center rounded outline-1 outline-offset-2 outline-sky-600 focus-visible:outline md:h-4 md:w-4"
-          ref={deleteButtonRef}
-        >
-          <TrashIcon className="h-6 w-6 md:h-4 md:w-4"></TrashIcon>
-        </button>
+          Icon={TrashIcon}
+        />
       </form>
       <form
-        method="post"
         onChange={updateItem}
         className="grid flex-shrink-0 flex-grow basis-20 place-items-center"
       >
@@ -117,7 +108,7 @@ export function ListItem({ item, disabled = false }: Props) {
           aria-label={`edit ${item.name} name`}
         ></Input>
       </form>
-      <form method="post" onChange={updateItem} className="flex items-center">
+      <form onChange={updateItem} className="flex items-center">
         <Checkbox
           defaultChecked={item.checked}
           name="checked"

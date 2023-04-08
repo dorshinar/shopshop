@@ -4,8 +4,6 @@ import { NextResponse } from "next/server";
 import invariant from "tiny-invariant";
 import { eq } from "drizzle-orm/expressions";
 
-// export const runtime = "experimental-edge";
-
 export async function POST(request: Request) {
   let params = await request.formData();
 
@@ -19,14 +17,23 @@ export async function POST(request: Request) {
     );
   }
 
-  let existingItem = await db.select().from(items).where(eq(items.name, item));
+  // console.time("getExisting");
+  let existingItem = await db
+    .select()
+    .from(items)
+    .where(eq(items.name, item))
+    .limit(1);
+  // console.timeEnd("getExisting");
 
   if (existingItem[0]) {
     await db.update(items).set({ checked: false }).where(eq(items.name, item));
-    return NextResponse.json({ newItem: existingItem[0] }, { status: 200 });
+    return new Response(undefined, { status: 204 });
   }
 
   await db.insert(items).values({ name: item });
-  let newItem = await db.select().from(items).where(eq(items.name, item));
-  return NextResponse.json({ newItem }, { status: 200 });
+  return new Response(undefined, { status: 204 });
 }
+
+export const config = {
+  runtime: "edge",
+};

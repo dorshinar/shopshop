@@ -10,3 +10,7 @@ export async function POST() {
 
   return new Response(undefined, { status: 200 });
 }
+
+export const config = {
+  runtime: "edge",
+};

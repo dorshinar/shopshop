@@ -6,10 +6,11 @@ import { Item } from "@/db/schema";
 interface ComboboxProps {
   options: Item[];
   name?: string;
+  label: string;
 }
 
 function ComboboxComponent(
-  { options, name }: ComboboxProps,
+  { options, name, label }: ComboboxProps,
   ref: React.Ref<HTMLInputElement>
 ) {
   const [query, setQuery] = useState("");
@@ -20,44 +21,43 @@ function ComboboxComponent(
   );
 
   return (
-    <>
-      <ComboboxBase
-        defaultValue={""}
-        onChange={(value) => setQuery(value ?? "")}
-        name={name}
-        nullable
-      >
-        <div className="relative grow">
-          <ComboboxBase.Input
-            onChange={(event) => setQuery(event.target.value)}
-            as={Input}
-            ref={ref}
-            dir="auto"
-            autoComplete="off"
-            fullWidth
-            textEllipsis
-            border
-          ></ComboboxBase.Input>
-          <Transition
-            enter="transition duration-100 ease-out"
-            enterFrom="transform scale-95 opacity-0"
-            enterTo="transform scale-100 opacity-100"
-            leave="transition duration-75 ease-out"
-            leaveFrom="transform scale-100 opacity-100"
-            leaveTo="transform scale-95 opacity-0"
-          >
-            <ComboboxBase.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-slate-50 shadow-lg ring-1 ring-black ring-opacity-5 dark:bg-slate-800">
-              {query.length > 0 && !filteredContainsQuery && (
-                <Option value={query} />
-              )}
-              {filtered.map((option) => (
-                <Option value={option.name} key={option.id}></Option>
-              ))}
-            </ComboboxBase.Options>
-          </Transition>
-        </div>
-      </ComboboxBase>
-    </>
+    <ComboboxBase
+      defaultValue={""}
+      onChange={(value) => setQuery(value ?? "")}
+      name={name}
+      nullable
+    >
+      <div className="relative grow">
+        <ComboboxBase.Input
+          onChange={(event) => setQuery(event.target.value)}
+          aria-label={label}
+          as={Input}
+          ref={ref}
+          dir="auto"
+          autoComplete="off"
+          fullWidth
+          textEllipsis
+          border
+        ></ComboboxBase.Input>
+        <Transition
+          enter="transition duration-100 ease-out"
+          enterFrom="transform scale-95 opacity-0"
+          enterTo="transform scale-100 opacity-100"
+          leave="transition duration-75 ease-out"
+          leaveFrom="transform scale-100 opacity-100"
+          leaveTo="transform scale-95 opacity-0"
+        >
+          <ComboboxBase.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-slate-50 shadow-lg ring-1 ring-black ring-opacity-5 dark:bg-slate-800">
+            {query.length > 0 && !filteredContainsQuery && (
+              <Option value={query} />
+            )}
+            {filtered.map((option) => (
+              <Option value={option.name} key={option.id}></Option>
+            ))}
+          </ComboboxBase.Options>
+        </Transition>
+      </div>
+    </ComboboxBase>
   );
 }
 

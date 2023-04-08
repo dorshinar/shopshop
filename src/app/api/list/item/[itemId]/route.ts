@@ -27,3 +27,7 @@ export async function DELETE(request: Request, { params }: Params) {
 
   return new Response(undefined, { status: 200 });
 }
+
+export const config = {
+  runtime: "edge",
+};
