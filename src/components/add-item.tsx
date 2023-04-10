@@ -63,6 +63,7 @@ export function AddItem({ items }: Props) {
               }}
               disabled
               key={name}
+              onUpdate={() => {}}
             ></ListItem>
           ))}
         </div>

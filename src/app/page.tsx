@@ -17,7 +17,6 @@ export default async function Home() {
     <>
       <Header>
         <span aria-hidden="true">🛒</span> My Fucking Shopping List
-        {/* {list.name} */}
       </Header>
       <main className="flex flex-col items-center justify-center py-4 px-8">
         <ListsWrapper items={items}>

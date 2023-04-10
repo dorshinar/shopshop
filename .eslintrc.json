@@ -1,14 +1,14 @@
 {
   "extends": [
-    "next/core-web-vitals",
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended"
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+    "next/core-web-vitals"
   ],
-  "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
-  "root": true,
   "rules": {
     "no-empty": "off",
-    "prefer-const": "off"
+    "prefer-const": "off",
+    "@typescript-eslint/no-empty-function": "off",
+    "@next/next/no-html-link-for-pages": "off"
   }
 }

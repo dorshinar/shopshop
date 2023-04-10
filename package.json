@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format:check": "prettier --check ./src ./tests",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.13",
@@ -35,7 +37,9 @@
     "@typescript-eslint/parser": "^5.57.1",
     "autoprefixer": "^10.4.14",
     "drizzle-kit": "^0.17.4",
+    "eslint-config-prettier": "^8.8.0",
     "postcss": "^8.4.21",
+    "prettier": "^2.8.7",
     "tailwindcss": "^3.3.1"
   }
 }

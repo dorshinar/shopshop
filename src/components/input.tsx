@@ -1,30 +1,20 @@
-import React, { JSXElementConstructor } from "react";
+import React from "react";
 
 export interface InputProps {
   fullWidth?: boolean;
   textEllipsis?: boolean;
   border?: boolean;
   secondary?: boolean;
-  as?: keyof JSX.IntrinsicElements | JSXElementConstructor<any>;
 }
 
 function Input(
   props: InputProps & React.InputHTMLAttributes<HTMLInputElement>,
   ref: React.Ref<HTMLInputElement>
 ) {
-  const {
-    fullWidth,
-    textEllipsis,
-    border = false,
-    secondary,
-    as: asProp,
-    ...rest
-  } = props;
-
-  let Element = asProp ?? "input";
+  const { fullWidth, textEllipsis, border = false, secondary, ...rest } = props;
 
   return (
-    <Element
+    <input
       className={`rounded-none text-start focus:outline-none dark:border-b-slate-50 dark:bg-slate-800
       ${fullWidth && "w-full"}
       ${textEllipsis && "text-ellipsis whitespace-pre"}
