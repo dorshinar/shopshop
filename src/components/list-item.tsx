@@ -1,5 +1,3 @@
-"use client";
-
 import Input from "./input";
 import { SymbolIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Checkbox } from "./checkbox";
@@ -11,17 +9,21 @@ import { IconButton } from "./icon-button";
 interface Props {
   item: Item;
   disabled?: boolean;
+  onUpdate(id: Item["id"], newItem: Partial<Item>): void;
 }
 
-export function ListItem({ item, disabled = false }: Props) {
+export function ListItem({ item, disabled = false, onUpdate }: Props) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [isFetching, setIsFetching] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
+
+  let isMutating = isPending || isFetching;
 
   const updateItem = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    let newItem = { ...item };
+    let newItem: Partial<Item> = {};
 
     const checkedInput = e.currentTarget.elements.namedItem("checked");
     if (checkedInput) {
@@ -38,6 +40,8 @@ export function ListItem({ item, disabled = false }: Props) {
       newItem.name = (nameInput as HTMLInputElement).value;
     }
 
+    onUpdate(item.id, newItem);
+
     setIsFetching(true);
     await fetch(`api/list/item/${item.id}`, {
       method: "POST",
@@ -53,6 +57,8 @@ export function ListItem({ item, disabled = false }: Props) {
   const deleteItem = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    setIsDeleted(true);
+
     setIsFetching(true);
     await fetch(`api/list/item/${item.id}`, {
       method: "DELETE",
@@ -63,6 +69,10 @@ export function ListItem({ item, disabled = false }: Props) {
       router.refresh();
     });
   };
+
+  if (isDeleted && isMutating) {
+    return <></>;
+  }
 
   return (
     <li

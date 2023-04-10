@@ -2,7 +2,6 @@ import { db } from "@/db/db";
 import { items } from "@/db/schema";
 import { NextResponse } from "next/server";
 import invariant from "tiny-invariant";
-import { eq } from "drizzle-orm/expressions";
 
 export async function POST(request: Request) {
   let params = await request.formData();
@@ -17,20 +16,10 @@ export async function POST(request: Request) {
     );
   }
 
-  // console.time("getExisting");
-  let existingItem = await db
-    .select()
-    .from(items)
-    .where(eq(items.name, item))
-    .limit(1);
-  // console.timeEnd("getExisting");
-
-  if (existingItem[0]) {
-    await db.update(items).set({ checked: false }).where(eq(items.name, item));
-    return new Response(undefined, { status: 204 });
-  }
-
-  await db.insert(items).values({ name: item });
+  await db
+    .insert(items)
+    .values({ name: item })
+    .onDuplicateKeyUpdate({ set: { checked: false } });
   return new Response(undefined, { status: 204 });
 }
 

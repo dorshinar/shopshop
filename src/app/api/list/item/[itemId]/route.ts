@@ -17,7 +17,7 @@ export async function POST(request: Request, { params }: Params) {
     .set(newItem)
     .where(eq(items.id, Number(itemId)));
 
-  return new Response(undefined, { status: 200 });
+  return new Response(undefined, { status: 204 });
 }
 
 export async function DELETE(request: Request, { params }: Params) {

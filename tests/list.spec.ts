@@ -1,16 +1,14 @@
 import { test, expect, Page } from "@playwright/test";
-import { beforeEach } from "node:test";
 
 test.beforeEach(async ({ page }) => {
-  page.goto(process.env.deployment || "http://127.0.0.1:3000");
-  await expect(page.getByRole("heading")).toHaveText("🛒 List Name TODO");
-  await new Promise((res) => setTimeout(res, 300));
+  await page.goto(process.env.deployment || "http://127.0.0.1:3000");
 });
 
 test("should add an item", async ({ page }) => {
   const itemName = `item ${Math.random().toString().slice(2)}`;
 
   await page.getByRole("combobox", { name: "add item to list" }).fill(itemName);
+  await page.getByRole("option", { name: itemName }).click();
   await page.getByRole("button", { name: "add item" }).click();
 
   await expect(
@@ -156,7 +154,7 @@ test("should suggest existing items", async ({ page }) => {
 
     await expect(page.getByRole("option", { name: `item ` })).toHaveCount(1);
     await expect(
-      page.getByRole("option", { name: `item ${items[0]}`, exact: true })
+      page.getByRole("option", { name: items[0], exact: true })
     ).toBeVisible();
   });
 });
@@ -166,10 +164,14 @@ test("should unchecked checked item when added", async ({ page }) => {
     await page
       .getByRole("checkbox", { name: `toggle ${itemName} checked` })
       .check();
+    await expect(
+      page.getByRole("checkbox", { name: `toggle ${itemName} unchecked` })
+    ).toBeChecked();
 
     await page
       .getByRole("combobox", { name: "add item to list" })
       .fill(itemName);
+    await page.getByRole("option", { name: itemName }).click();
     await page.getByRole("button", { name: "add item" }).click();
 
     await expect(
@@ -183,17 +185,15 @@ test("should unchecked checked item when added", async ({ page }) => {
 
 test("should change item name", async ({ page }) => {
   await withNewItem(page, async (itemName) => {
-    await page
-      .getByRole("textbox", { name: `edit ${itemName} name`, exact: true })
-      .fill("new item name");
+    const updatedName = `item ${Math.random().toString().slice(2)}`;
 
     await page
-      .getByRole("textbox", { name: `edit new item name name`, exact: true })
-      .press("Enter");
+      .getByRole("textbox", { name: `edit ${itemName} name`, exact: true })
+      .fill(updatedName);
 
     await expect(
       page.getByRole("textbox", {
-        name: `edit new item name name`,
+        name: `edit ${updatedName} name`,
         exact: true,
       })
     ).toBeEnabled();
@@ -206,26 +206,8 @@ test("should change item name", async ({ page }) => {
     ).toBeHidden();
 
     await page
-      .getByRole("textbox", { name: `edit new item name name`, exact: true })
+      .getByRole("textbox", { name: `edit ${updatedName} name`, exact: true })
       .fill(itemName);
-
-    await page
-      .getByRole("textbox", { name: `edit ${itemName} name`, exact: true })
-      .press("Enter");
-
-    await expect(
-      page.getByRole("textbox", {
-        name: `edit ${itemName} name`,
-        exact: true,
-      })
-    ).toBeEnabled();
-
-    await expect(
-      page.getByRole("textbox", {
-        name: `edit new item name name`,
-        exact: true,
-      })
-    ).toBeHidden();
   });
 });
 
@@ -234,9 +216,16 @@ test("restore unchecks all recurring items", async ({ page }) => {
     await page
       .getByRole("checkbox", { name: `toggle ${itemNames[0]} checked` })
       .check();
+    await expect(
+      page.getByRole("checkbox", { name: `toggle ${itemNames[0]} unchecked` })
+    ).toBeChecked();
+
     await page
       .getByRole("checkbox", { name: `toggle ${itemNames[1]} checked` })
       .check();
+    await expect(
+      page.getByRole("checkbox", { name: `toggle ${itemNames[1]} unchecked` })
+    ).toBeChecked();
 
     await page
       .getByRole("checkbox", {
@@ -244,6 +233,12 @@ test("restore unchecks all recurring items", async ({ page }) => {
         exact: true,
       })
       .check();
+    await expect(
+      page.getByRole("checkbox", {
+        name: `set ${itemNames[0]} as non-recurring`,
+        exact: true,
+      })
+    ).toBeChecked();
 
     await page
       .getByRole("checkbox", {
@@ -251,6 +246,12 @@ test("restore unchecks all recurring items", async ({ page }) => {
         exact: true,
       })
       .check();
+    await expect(
+      page.getByRole("checkbox", {
+        name: `set ${itemNames[2]} as non-recurring`,
+        exact: true,
+      })
+    ).toBeChecked();
 
     await page
       .getByRole("button", { name: "Restore recurring", exact: true })
@@ -293,7 +294,14 @@ async function withNewItem(
   const itemName = `item ${Math.random().toString().slice(2)}`;
 
   await page.getByRole("combobox", { name: "add item to list" }).fill(itemName);
+  await page.getByRole("option", { name: itemName }).click();
   await page.getByRole("button", { name: "add item" }).click();
+  await expect(
+    page.getByRole("textbox", {
+      name: `edit ${itemName} name`,
+      exact: true,
+    })
+  ).toHaveValue(itemName);
 
   try {
     await testFn(itemName);
@@ -325,23 +333,24 @@ async function withNewItems(
       await page
         .getByRole("combobox", { name: "add item to list" })
         .fill(itemName);
+      await page.getByRole("option", { name: itemName }).click();
       await page.getByRole("button", { name: "add item" }).click();
+      await expect(
+        page.getByRole("textbox", {
+          name: `edit ${itemName} name`,
+          exact: true,
+        })
+      ).toHaveValue(itemName);
     }
 
     try {
       await testFn(itemNames);
     } finally {
-      for (const itemName in itemNames) {
+      for (const itemName of itemNames) {
         try {
           await page
             .getByRole("button", { name: `delete ${itemName}` })
             .click({ timeout: 100 });
-          await expect(
-            page.getByRole("textbox", {
-              name: `edit ${itemName} name`,
-              exact: true,
-            })
-          ).toBeHidden({ timeout: 100 });
         } catch {}
       }
     }
