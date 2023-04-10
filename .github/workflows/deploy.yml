@@ -9,8 +9,8 @@ permissions:
   contents: read
 
 jobs:
-  lint:
-    name: ⬣ ESLint
+  quality:
+    name: Quality
     runs-on: ubuntu-latest
     steps:
       - name: 🛑 Cancel Previous Runs
