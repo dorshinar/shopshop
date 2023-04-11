@@ -17,8 +17,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: debug
-        run: echo "::debug github.ref ${{github.ref}} ${{github}}"
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: |
+          echo "$GITHUB_CONTEXT"
 
       - uses: actions/setup-node@v3
         with:
