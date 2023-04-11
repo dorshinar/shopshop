@@ -49,6 +49,8 @@ jobs:
 
       - name: Run Playwright tests
         run: pnpm exec playwright test
+        env:
+          deployment: ${{ github.event.deployment_status.target_url }}
 
       - uses: actions/upload-artifact@v3
         if: always()
