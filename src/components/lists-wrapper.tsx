@@ -8,13 +8,13 @@ interface Props {
   items: Item[];
 }
 
+type UpdatedItems = Record<Item["id"], Partial<Item>>;
+
 export function ListsWrapper({
   items: itemsProp,
   children,
 }: React.PropsWithChildren<Props>) {
-  const [updatedItems, setUpdatedItems] = useState<
-    Record<Item["id"], Partial<Item>>
-  >({});
+  const [updatedItems, setUpdatedItems] = useState<UpdatedItems>({});
 
   let items = itemsProp.map((item) => ({ ...item, ...updatedItems[item.id] }));
 
