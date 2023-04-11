@@ -1,12 +1,11 @@
 name: Playwright Tests
-on:
-  deployment_status:
+on: deployment_status
 permissions:
   actions: write
   contents: read
 
 concurrency:
-  group: ${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
