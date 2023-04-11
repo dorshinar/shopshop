@@ -5,15 +5,16 @@ permissions:
   actions: write
   contents: read
 
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: 🎭 Playwright
     timeout-minutes: 5
     runs-on: ubuntu-latest
     if: github.event.deployment_status.state == 'success'
-    concurrency:
-      group: ${{ github.ref }}
-      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v3
 
