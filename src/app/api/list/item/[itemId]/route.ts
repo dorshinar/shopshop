@@ -1,6 +1,6 @@
 import { db } from "@/db/db";
 import { Item, items } from "@/db/schema";
-import { eq } from "drizzle-orm/expressions";
+import { eq } from "drizzle-orm";
 
 interface Params {
   params: {
