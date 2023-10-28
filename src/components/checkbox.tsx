@@ -1,13 +1,14 @@
 import React from "react";
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
 import { CheckIcon } from "@radix-ui/react-icons";
+import { cn } from "@/lib/utils";
 
 interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   border?: boolean;
 }
 
 function CheckboxComponent(
-  { children, border = !children, defaultChecked, ...props }: Props,
+  { children, border = !children, defaultChecked, className, ...props }: Props,
   ref: React.Ref<HTMLButtonElement>
 ) {
   return (
@@ -15,16 +16,13 @@ function CheckboxComponent(
       {...props}
       ref={ref}
       defaultChecked={defaultChecked}
-      className={`rounded md:h-4 md:w-4 ${
-        border ? "h-6 w-6 border" : "h-11 w-11"
-      }
-      outline-1 outline-offset-2 outline-sky-600 focus-visible:outline
-      ${
-        defaultChecked
-          ? "border-neutral-400 dark:border-neutral-400"
-          : "border-slate-800 dark:border-slate-50"
-      }
-      `}
+      className={cn(
+        "rounded md:h-4 md:w-4",
+        border ? "h-6 w-6 border" : "h-11 w-11",
+        "outline-1 outline-offset-2 outline-sky-600 focus-visible:outline",
+        "data-[state='checked']:border-neutral-400 data-[state='checked']:dark:border-neutral-400 data-[state='unchecked']:border-slate-800 data-[state='unchecked']:dark:border-slate-50",
+        className
+      )}
     >
       <CheckboxPrimitive.Indicator
         forceMount={Boolean(children) || undefined}
