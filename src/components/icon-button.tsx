@@ -1,7 +1,9 @@
-import React, { JSXElementConstructor } from "react";
+import React from "react";
 
 interface Props {
-  Icon: keyof JSX.IntrinsicElements | JSXElementConstructor<any>;
+  Icon: React.ComponentType<{
+    className?: string;
+  }>;
   size?: "large" | "small";
 }
 
@@ -11,7 +13,7 @@ function InnerIconButton(
     size = "large",
     ...props
   }: Props & React.ButtonHTMLAttributes<HTMLButtonElement>,
-  ref: React.Ref<HTMLButtonElement>
+  ref: React.Ref<HTMLButtonElement>,
 ) {
   return (
     <button

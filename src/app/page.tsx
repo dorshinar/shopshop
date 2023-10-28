@@ -22,21 +22,18 @@ export default async function Home() {
       <main className="flex flex-col items-center justify-center py-4 px-8">
         <ListsWrapper items={items}>
           <AddItem items={items} />
-
           <Separator></Separator>
-
           <p className="mt-2 w-full text-sm text-slate-600 dark:text-slate-300">
             Checked items:
           </p>
         </ListsWrapper>
-
         <RestoreRecurring />
       </main>
     </>
   );
 }
 
-export const runtime = "experimental-edge";
+export const runtime = "edge";
 export const revalidate = 0;
 
 export const metadata: Metadata = {

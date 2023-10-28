@@ -2,34 +2,23 @@
 
 import { Item } from "@/db/schema";
 import { ListItem } from "./list-item";
-import { useState } from "react";
 
 interface Props {
   items: Item[];
 }
 
-type UpdatedItems = Record<Item["id"], Partial<Item>>;
-
 export function ListsWrapper({
-  items: itemsProp,
+  items,
   children,
 }: React.PropsWithChildren<Props>) {
-  const [updatedItems, setUpdatedItems] = useState<UpdatedItems>({});
-
-  let items = itemsProp.map((item) => ({ ...item, ...updatedItems[item.id] }));
-
   let checked = items.filter((item) => item.checked);
   let unchecked = items.filter((item) => !item.checked);
-
-  const onUpdate = (id: Item["id"], item: Partial<Item>) => {
-    setUpdatedItems((updated) => ({ ...updated, [id]: item }));
-  };
 
   return (
     <>
       <ul className="mt-1 w-full">
         {unchecked.map((item) => (
-          <ListItem key={item.id} item={item} onUpdate={onUpdate}></ListItem>
+          <ListItem key={item.id} item={item}></ListItem>
         ))}
       </ul>
 
@@ -37,7 +26,7 @@ export function ListsWrapper({
 
       <ul className="mt-1 w-full">
         {checked.map((item) => (
-          <ListItem key={item.id} item={item} onUpdate={onUpdate}></ListItem>
+          <ListItem key={item.id} item={item}></ListItem>
         ))}
       </ul>
     </>

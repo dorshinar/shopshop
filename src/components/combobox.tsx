@@ -11,13 +11,13 @@ interface ComboboxProps {
 
 function ComboboxComponent(
   { options, name, label }: ComboboxProps,
-  ref: React.Ref<HTMLInputElement>
+  ref: React.Ref<HTMLInputElement>,
 ) {
   const [query, setQuery] = useState("");
 
   const filtered = options.filter((option) => option.name.includes(query));
   const filteredContainsQuery = Boolean(
-    filtered.find((item) => item.name === query)
+    filtered.find((item) => item.name === query),
   );
 
   return (

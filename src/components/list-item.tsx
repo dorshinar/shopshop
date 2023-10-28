@@ -1,77 +1,31 @@
 import Input from "./input";
 import { SymbolIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Checkbox } from "./checkbox";
-import { useState, useTransition } from "react";
 import { Item } from "@/db/schema";
-import { useRouter } from "next/navigation";
 import { IconButton } from "./icon-button";
+import { checkItem, deleteItem, updateRecurring } from "@/api/actions";
+import { startTransition } from "react";
+import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 interface Props {
   item: Item;
   disabled?: boolean;
-  onUpdate(id: Item["id"], newItem: Partial<Item>): void;
+  onItemChecked?(id: Item["id"]): void;
+  onItemDeleted?(id: Item["id"]): void;
 }
 
-export function ListItem({ item, disabled = false, onUpdate }: Props) {
+export function ListItem({
+  item,
+  disabled = false,
+  onItemChecked,
+  onItemDeleted,
+}: Props) {
+  const _updateItem = () => {};
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
-  const [isFetching, setIsFetching] = useState(false);
-  const [isDeleted, setIsDeleted] = useState(false);
 
-  let isMutating = isPending || isFetching;
-
-  const updateItem = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    let newItem: Partial<Item> = {};
-
-    const checkedInput = e.currentTarget.elements.namedItem("checked");
-    if (checkedInput) {
-      newItem.checked = (checkedInput as HTMLInputElement).checked;
-    }
-
-    const recurringInput = e.currentTarget.elements.namedItem("recurring");
-    if (recurringInput) {
-      newItem.recurring = (recurringInput as HTMLInputElement).checked;
-    }
-
-    const nameInput = e.currentTarget.elements.namedItem("name");
-    if (nameInput) {
-      newItem.name = (nameInput as HTMLInputElement).value;
-    }
-
-    onUpdate(item.id, newItem);
-
-    setIsFetching(true);
-    await fetch(`api/list/item/${item.id}`, {
-      method: "POST",
-      body: JSON.stringify(newItem),
-    });
-    setIsFetching(false);
-
-    startTransition(() => {
-      router.refresh();
-    });
-  };
-
-  const deleteItem = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    setIsDeleted(true);
-
-    setIsFetching(true);
-    await fetch(`api/list/item/${item.id}`, {
-      method: "DELETE",
-    });
-    setIsFetching(false);
-
-    startTransition(() => {
-      router.refresh();
-    });
-  };
-
-  if (isDeleted && isMutating) {
-    return <></>;
+  if (!item) {
+    return null;
   }
 
   return (
@@ -79,7 +33,19 @@ export function ListItem({ item, disabled = false, onUpdate }: Props) {
       className="mt-1 flex items-center justify-end gap-2 first:mt-0"
       aria-hidden={disabled}
     >
-      <form onChange={updateItem} className="flex items-center">
+      <form
+        action={updateRecurring}
+        onSubmit={async (e) => {
+          e.preventDefault();
+          await updateRecurring(new FormData(e.currentTarget));
+
+          startTransition(() => {
+            router.refresh();
+          });
+        }}
+        className="flex items-center"
+      >
+        <input type="hidden" value={item.id} name="id" />
         <Checkbox
           defaultChecked={item.recurring}
           name="recurring"
@@ -87,25 +53,44 @@ export function ListItem({ item, disabled = false, onUpdate }: Props) {
             item.recurring ? "non-recurring" : "recurring"
           }`}
           disabled={disabled}
+          className="group"
+          type="submit"
         >
           <SymbolIcon
-            className={`h-6 w-6 md:h-4 md:w-4 ${
-              item.recurring ? "opacity-100" : "opacity-50"
-            } transition-opacity`}
+            className={cn(
+              "h-6 w-6 md:h-4 md:w-4",
+              "group-data-[state='checked']:opacity-100 group-data-[state='unchecked']:opacity-50",
+              "transition-opacity",
+            )}
           ></SymbolIcon>
         </Checkbox>
       </form>
-      <form onSubmit={deleteItem} className="flex items-center text-center">
+      <form
+        action={deleteItem}
+        onSubmit={async (e) => {
+          e.preventDefault();
+          startTransition(() => {
+            onItemDeleted?.(item.id);
+          });
+
+          await deleteItem(new FormData(e.currentTarget));
+        }}
+        className="flex items-center text-center"
+      >
+        <input type="hidden" value={item.id} name="id" />
         <IconButton
           disabled={disabled}
           aria-label={`delete ${item.name}`}
           Icon={TrashIcon}
+          name="id"
+          value={item.id}
         />
       </form>
       <form
-        onChange={updateItem}
+        onChange={_updateItem}
         className="grid flex-shrink-0 flex-grow basis-20 place-items-center"
       >
+        <input type="hidden" value={item.id} name="id" />
         <Input
           dir="auto"
           name="name"
@@ -118,7 +103,20 @@ export function ListItem({ item, disabled = false, onUpdate }: Props) {
           aria-label={`edit ${item.name} name`}
         ></Input>
       </form>
-      <form onChange={updateItem} className="flex items-center">
+      <form
+        action={checkItem}
+        onSubmit={async (e) => {
+          e.preventDefault();
+
+          // startTransition(() => {
+          onItemChecked?.(item.id);
+          // });
+
+          await checkItem(new FormData(e.currentTarget));
+        }}
+        className="flex items-center"
+      >
+        <input type="hidden" value={item.id} name="id" />
         <Checkbox
           defaultChecked={item.checked}
           name="checked"
@@ -126,6 +124,7 @@ export function ListItem({ item, disabled = false, onUpdate }: Props) {
             item.checked ? "unchecked" : "checked"
           }`}
           disabled={disabled}
+          type="submit"
           border
         ></Checkbox>
       </form>
