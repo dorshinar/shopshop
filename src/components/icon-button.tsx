@@ -1,7 +1,9 @@
-import React, { JSXElementConstructor } from "react";
+import React from "react";
 
 interface Props {
-  Icon: keyof JSX.IntrinsicElements | JSXElementConstructor<any>;
+  Icon: React.ComponentType<{
+    className?: string;
+  }>;
   size?: "large" | "small";
 }
 
