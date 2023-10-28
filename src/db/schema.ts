@@ -15,7 +15,7 @@ export const items = mysqlTable(
     checked: boolean("checked").notNull().default(false),
     recurring: boolean("recurring").notNull().default(false),
   },
-  (items) => ({ nameIndex: uniqueIndex("name_idx").on(items.name) })
+  (items) => ({ nameIndex: uniqueIndex("name_idx").on(items.name) }),
 );
 
 export type Item = InferModel<typeof items>;

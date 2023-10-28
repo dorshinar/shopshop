@@ -9,7 +9,7 @@ interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 function CheckboxComponent(
   { children, border = !children, defaultChecked, className, ...props }: Props,
-  ref: React.Ref<HTMLButtonElement>
+  ref: React.Ref<HTMLButtonElement>,
 ) {
   return (
     <CheckboxPrimitive.Root
@@ -21,7 +21,7 @@ function CheckboxComponent(
         border ? "h-6 w-6 border" : "h-11 w-11",
         "outline-1 outline-offset-2 outline-sky-600 focus-visible:outline",
         "data-[state='checked']:border-neutral-400 data-[state='checked']:dark:border-neutral-400 data-[state='unchecked']:border-slate-800 data-[state='unchecked']:dark:border-slate-50",
-        className
+        className,
       )}
     >
       <CheckboxPrimitive.Indicator

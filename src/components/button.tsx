@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function Button(
-  props: React.ButtonHTMLAttributes<HTMLButtonElement>
+  props: React.ButtonHTMLAttributes<HTMLButtonElement>,
 ) {
   return (
     <button

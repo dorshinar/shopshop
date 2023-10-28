@@ -60,7 +60,7 @@ export function ListItem({
             className={cn(
               "h-6 w-6 md:h-4 md:w-4",
               "group-data-[state='checked']:opacity-100 group-data-[state='unchecked']:opacity-50",
-              "transition-opacity"
+              "transition-opacity",
             )}
           ></SymbolIcon>
         </Checkbox>

@@ -13,7 +13,7 @@ function InnerIconButton(
     size = "large",
     ...props
   }: Props & React.ButtonHTMLAttributes<HTMLButtonElement>,
-  ref: React.Ref<HTMLButtonElement>
+  ref: React.Ref<HTMLButtonElement>,
 ) {
   return (
     <button

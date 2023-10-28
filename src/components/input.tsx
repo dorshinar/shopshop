@@ -9,7 +9,7 @@ export interface InputProps {
 
 function Input(
   props: InputProps & React.InputHTMLAttributes<HTMLInputElement>,
-  ref: React.Ref<HTMLInputElement>
+  ref: React.Ref<HTMLInputElement>,
 ) {
   const { fullWidth, textEllipsis, border = false, secondary, ...rest } = props;
 
