@@ -3,16 +3,22 @@ import { SymbolIcon, TrashIcon } from "@radix-ui/react-icons";
 import { Checkbox } from "./checkbox";
 import { Item } from "@/db/schema";
 import { IconButton } from "./icon-button";
-import { checkItem, deleteItem, updateRecurring } from "@/api/actions";
+import {
+  checkItem,
+  deleteItem,
+  updateName,
+  updateRecurring,
+} from "@/api/actions";
 import { startTransition } from "react";
-import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 interface Props {
   item: Item;
   disabled?: boolean;
-  onItemChecked?(id: Item["id"]): void;
-  onItemDeleted?(id: Item["id"]): void;
+  onItemChecked(item: Item): void;
+  onItemDeleted(item: Item): void;
+  onItemRecurringUpdated(item: Item): void;
+  onItemNameUpdated(item: Item): void;
 }
 
 export function ListItem({
@@ -20,10 +26,9 @@ export function ListItem({
   disabled = false,
   onItemChecked,
   onItemDeleted,
+  onItemRecurringUpdated,
+  onItemNameUpdated,
 }: Props) {
-  const _updateItem = () => {};
-  const router = useRouter();
-
   if (!item) {
     return null;
   }
@@ -37,11 +42,10 @@ export function ListItem({
         action={updateRecurring}
         onSubmit={async (e) => {
           e.preventDefault();
-          await updateRecurring(new FormData(e.currentTarget));
-
           startTransition(() => {
-            router.refresh();
+            onItemRecurringUpdated?.(item);
           });
+          await updateRecurring(new FormData(e.currentTarget));
         }}
         className="flex items-center"
       >
@@ -70,9 +74,8 @@ export function ListItem({
         onSubmit={async (e) => {
           e.preventDefault();
           startTransition(() => {
-            onItemDeleted?.(item.id);
+            onItemDeleted?.(item);
           });
-
           await deleteItem(new FormData(e.currentTarget));
         }}
         className="flex items-center text-center"
@@ -87,7 +90,19 @@ export function ListItem({
         />
       </form>
       <form
-        onChange={_updateItem}
+        action={updateName}
+        onChange={async (e) => {
+          e.preventDefault();
+          const formData = new FormData(e.currentTarget);
+          startTransition(() => {
+            onItemNameUpdated({
+              ...item,
+              name: formData.get("name")?.toString() ?? "",
+            });
+          });
+
+          await updateName(formData);
+        }}
         className="grid flex-shrink-0 flex-grow basis-20 place-items-center"
       >
         <input type="hidden" value={item.id} name="id" />
@@ -107,11 +122,9 @@ export function ListItem({
         action={checkItem}
         onSubmit={async (e) => {
           e.preventDefault();
-
-          // startTransition(() => {
-          onItemChecked?.(item.id);
-          // });
-
+          startTransition(() => {
+            onItemChecked?.(item);
+          });
           await checkItem(new FormData(e.currentTarget));
         }}
         className="flex items-center"
