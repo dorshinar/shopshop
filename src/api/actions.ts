@@ -7,7 +7,6 @@ import { revalidatePath } from "next/cache";
 import invariant from "tiny-invariant";
 
 export async function insertItem(formData: FormData) {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
   let item = formData.get("item");
   invariant(typeof item === "string", "item name must be provided");
 
@@ -24,7 +23,6 @@ export async function insertItem(formData: FormData) {
 }
 
 export async function updateRecurring(formData: FormData) {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
   await db
     .update(items)
     .set({ recurring: formData.get("recurring")?.toString() === "on" })
@@ -34,14 +32,12 @@ export async function updateRecurring(formData: FormData) {
 }
 
 export async function deleteItem(formData: FormData) {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
   await db.delete(items).where(eq(items.id, Number(formData.get("id"))));
 
   revalidatePath("/");
 }
 
 export async function checkItem(formData: FormData) {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
   await db
     .update(items)
     .set({ checked: formData.get("checked")?.toString() === "on" })
@@ -51,7 +47,6 @@ export async function checkItem(formData: FormData) {
 }
 
 export async function updateName(formData: FormData) {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
   await db
     .update(items)
     .set({ name: formData.get("name")?.toString() })
@@ -61,7 +56,6 @@ export async function updateName(formData: FormData) {
 }
 
 export async function restoreRecurring() {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
   await db
     .update(items)
     .set({ checked: false })
@@ -71,7 +65,6 @@ export async function restoreRecurring() {
 }
 
 export async function checkAll() {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
   await db.update(items).set({ checked: true });
 
   revalidatePath("/");
