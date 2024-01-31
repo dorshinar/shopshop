@@ -36,9 +36,11 @@ export function ListsWrapper({ items }: Props) {
 
           return item;
         });
+      } else if (update.type === "remove") {
+        return items.filter((item) => item.id !== update.item.id);
       }
 
-      return items.filter((item) => item.id !== update.item.id);
+      return items;
     },
   );
   let [checked, updateCheckedOptimistic] = useOptimistic(
