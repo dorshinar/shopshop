@@ -1,6 +1,4 @@
-"use client";
-
-import { useRef } from "react";
+import { startTransition, useRef } from "react";
 import { Item } from "@/db/schema";
 import { IconButton } from "./icon-button";
 import { PlusIcon } from "@radix-ui/react-icons";
@@ -9,9 +7,10 @@ import { insertItem } from "@/api/actions";
 
 interface Props {
   items: Item[];
+  onItemAdded(item: Item): void;
 }
 
-export function AddItem({ items }: Props) {
+export function AddItem({ items, onItemAdded }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -21,10 +20,21 @@ export function AddItem({ items }: Props) {
       onSubmit={async (e) => {
         e.preventDefault();
         formRef.current?.reset();
-        await insertItem(new FormData(e.currentTarget));
+
+        const formData = new FormData(e.currentTarget);
+
+        startTransition(() => {
+          onItemAdded({
+            id: Math.random(),
+            name: formData.get("item")?.toString() ?? "",
+            checked: false,
+            recurring: false,
+          });
+        });
+        await insertItem(formData);
       }}
       ref={formRef}
-      className="mb-4 mt-1 w-full"
+      className="mt-1 w-full"
     >
       <div className="flex items-center gap-2">
         <span className="min-h-[2.75rem] min-w-[2.75rem] md:min-h-[1rem] md:min-w-[1rem]"></span>

@@ -71,8 +71,8 @@ function Option({ value }: { value: string }) {
               active
                 ? "bg-slate-300 dark:bg-sky-300 dark:text-slate-800"
                 : selected
-                ? "bg-slate-200 dark:bg-sky-500"
-                : "dark:bg-slate-700"
+                  ? "bg-slate-200 dark:bg-sky-500"
+                  : "dark:bg-slate-700"
             }
         `}
         >
