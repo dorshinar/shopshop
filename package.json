@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "format": "prettier --write ./src",
     "format:check": "prettier --check ./src",
     "typecheck": "tsc --noEmit",
     "db:push:dev": "env-cmd -f .env.local drizzle-kit push:pg",
