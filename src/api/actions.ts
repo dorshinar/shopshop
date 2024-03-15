@@ -17,7 +17,7 @@ export async function insertItem(formData: FormData) {
   await db
     .insert(items)
     .values({ name: item })
-    .onDuplicateKeyUpdate({ set: { checked: false } });
+    .onConflictDoUpdate({ target: items.name, set: { checked: false } });
 
   revalidatePath("/");
 }

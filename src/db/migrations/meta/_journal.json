@@ -1,0 +1,20 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1710494413406,
+      "tag": "0000_watery_monster_badoon",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1710494418096,
+      "tag": "0001_faithful_mysterio",
+      "breakpoints": true
+    }
+  ]
+}
