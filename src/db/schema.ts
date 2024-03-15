@@ -1,13 +1,16 @@
-import { InferModel } from "drizzle-orm";
 import {
   boolean,
-  mysqlTable,
+  pgTableCreator,
   serial,
   uniqueIndex,
   varchar,
-} from "drizzle-orm/mysql-core";
+} from "drizzle-orm/pg-core";
 
-export const items = mysqlTable(
+const pgTable = pgTableCreator(
+  (name) => `${process.env.POSTGRES_PREFIX}${name}`,
+);
+
+export const items = pgTable(
   "items",
   {
     id: serial("id").primaryKey(),
@@ -18,4 +21,4 @@ export const items = mysqlTable(
   (items) => ({ nameIndex: uniqueIndex("name_idx").on(items.name) }),
 );
 
-export type Item = InferModel<typeof items>;
+export type Item = typeof items.$inferSelect;
