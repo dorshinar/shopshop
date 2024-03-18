@@ -18,7 +18,11 @@ export const items = pgTable(
     checked: boolean("checked").notNull().default(false),
     recurring: boolean("recurring").notNull().default(false),
   },
-  (items) => ({ nameIndex: uniqueIndex("name_idx").on(items.name) }),
+  (items) => ({
+    nameIndex: uniqueIndex(`${process.env.POSTGRES_PREFIX}name_idx`).on(
+      items.name,
+    ),
+  }),
 );
 
 export type Item = typeof items.$inferSelect;
