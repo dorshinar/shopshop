@@ -1,14 +1,16 @@
 {
+  "id": "b0a6cec2-da51-451f-9851-ceed76958060",
+  "prevId": "a5cd7732-c6e5-4de9-81cb-a14f288f097c",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.dev_items": {
-      "name": "dev_items",
+    "public.prod_items": {
+      "name": "prod_items",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "text",
           "primaryKey": true,
           "notNull": true
         },
@@ -33,42 +35,32 @@
           "default": false
         }
       },
-      "indexes": {
-        "name_idx": {
-          "columns": [
-            {
-              "expression": "name",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "with": {},
-          "name": "name_idx",
-          "isUnique": true,
-          "method": "btree",
-          "concurrently": false
-        }
-      },
+      "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "prod_items_name_unique": {
+          "name": "prod_items_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      },
       "policies": {},
-      "isRLSEnabled": false,
-      "checkConstraints": {}
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
   "enums": {},
   "schemas": {},
-  "_meta": {
-    "schemas": {},
-    "tables": {},
-    "columns": {}
-  },
-  "id": "c28fed9d-b3d7-4fe3-bd55-f5de9076a070",
-  "prevId": "00000000-0000-0000-0000-000000000000",
   "sequences": {},
+  "roles": {},
   "policies": {},
   "views": {},
-  "roles": {}
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
 }

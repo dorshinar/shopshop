@@ -26,13 +26,15 @@ export async function updateRecurring(formData: FormData) {
   await db
     .update(items)
     .set({ recurring: formData.get("recurring")?.toString() === "on" })
-    .where(eq(items.id, Number(formData.get("id"))));
+    .where(eq(items.id, formData.get("id")?.toString() ?? ""));
 
   revalidatePath("/");
 }
 
 export async function deleteItem(formData: FormData) {
-  await db.delete(items).where(eq(items.id, Number(formData.get("id"))));
+  await db
+    .delete(items)
+    .where(eq(items.id, formData.get("id")?.toString() ?? ""));
 
   revalidatePath("/");
 }
@@ -41,7 +43,7 @@ export async function checkItem(formData: FormData) {
   await db
     .update(items)
     .set({ checked: formData.get("checked")?.toString() === "on" })
-    .where(eq(items.id, Number(formData.get("id"))));
+    .where(eq(items.id, formData.get("id")?.toString() ?? ""));
 
   revalidatePath("/");
 }
@@ -50,7 +52,7 @@ export async function updateName(formData: FormData) {
   await db
     .update(items)
     .set({ name: formData.get("name")?.toString() })
-    .where(eq(items.id, Number(formData.get("id"))));
+    .where(eq(items.id, formData.get("id")?.toString() ?? ""));
 
   revalidatePath("/");
 }
