@@ -4,6 +4,7 @@ import { IconButton } from "./icon-button";
 import { PlusIcon } from "@radix-ui/react-icons";
 import { Combobox } from "./combobox";
 import { insertItem } from "@/api/actions";
+import { createId } from "@paralleldrive/cuid2";
 
 interface Props {
   items: Item[];
@@ -25,7 +26,7 @@ export function AddItem({ items, onItemAdded }: Props) {
 
         startTransition(() => {
           onItemAdded({
-            id: Math.random(),
+            id: createId(),
             name: formData.get("item")?.toString() ?? "",
             checked: false,
             recurring: false,
