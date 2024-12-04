@@ -21,12 +21,7 @@ function ComboboxComponent(
   );
 
   return (
-    <ComboboxBase
-      defaultValue={""}
-      onChange={(value) => setQuery(value ?? "")}
-      name={name}
-      nullable
-    >
+    <ComboboxBase defaultValue={""} onChange={setQuery} name={name}>
       <div className="relative grow">
         <ComboboxBase.Input
           onChange={(event) => setQuery(event.target.value)}
