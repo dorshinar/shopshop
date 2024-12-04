@@ -1,5 +1,11 @@
 import React, { Fragment, useState } from "react";
-import { Combobox as ComboboxBase, Transition } from "@headlessui/react";
+import {
+  Combobox as ComboboxBase,
+  ComboboxInput,
+  ComboboxOption,
+  ComboboxOptions,
+  Transition,
+} from "@headlessui/react";
 import Input from "./input";
 import { Item } from "@/db/schema";
 
@@ -21,9 +27,13 @@ function ComboboxComponent(
   );
 
   return (
-    <ComboboxBase defaultValue={""} onChange={setQuery} name={name}>
+    <ComboboxBase
+      defaultValue={""}
+      onChange={(value: string | undefined) => setQuery(value ?? "")}
+      name={name}
+    >
       <div className="relative grow">
-        <ComboboxBase.Input
+        <ComboboxInput
           onChange={(event) => setQuery(event.target.value)}
           aria-label={label}
           as={Input}
@@ -33,7 +43,7 @@ function ComboboxComponent(
           fullWidth
           textEllipsis
           border
-        ></ComboboxBase.Input>
+        ></ComboboxInput>
         <Transition
           enter="transition duration-100 ease-out"
           enterFrom="transform scale-95 opacity-0"
@@ -42,14 +52,14 @@ function ComboboxComponent(
           leaveFrom="transform scale-100 opacity-100"
           leaveTo="transform scale-95 opacity-0"
         >
-          <ComboboxBase.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-slate-50 shadow-lg ring-1 ring-black ring-opacity-5 dark:bg-slate-800">
+          <ComboboxOptions className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-slate-50 shadow-lg ring-1 ring-black ring-opacity-5 dark:bg-slate-800">
             {query.length > 0 && !filteredContainsQuery && (
               <Option value={query} />
             )}
             {filtered.map((option) => (
               <Option value={option.name} key={option.id}></Option>
             ))}
-          </ComboboxBase.Options>
+          </ComboboxOptions>
         </Transition>
       </div>
     </ComboboxBase>
@@ -58,7 +68,7 @@ function ComboboxComponent(
 
 function Option({ value }: { value: string }) {
   return (
-    <ComboboxBase.Option value={value} as={Fragment}>
+    <ComboboxOption value={value} as={Fragment}>
       {({ active, selected }) => (
         <li
           className={`flex flex-row-reverse p-2 text-slate-800 dark:text-slate-50
@@ -74,7 +84,7 @@ function Option({ value }: { value: string }) {
           {value}
         </li>
       )}
-    </ComboboxBase.Option>
+    </ComboboxOption>
   );
 }
 
