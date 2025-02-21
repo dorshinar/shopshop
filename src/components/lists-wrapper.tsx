@@ -2,7 +2,7 @@
 
 import { Item } from "@/db/schema";
 import { ListItem } from "./list-item";
-import { startTransition, useOptimistic } from "react";
+import { startTransition, use, useOptimistic } from "react";
 import { AddItem } from "./add-item";
 import { checkAll, restoreRecurring } from "@/api/actions";
 import { Button } from "./button";
@@ -16,17 +16,18 @@ type OptimisticUpdate =
     };
 
 interface Props {
-  items: Item[];
+  itemsPromise: Promise<Item[]>;
 }
 
-export function ListsWrapper({ items }: Props) {
+export function ListsWrapper({ itemsPromise }: Props) {
+  const items = use(itemsPromise);
+
   let [unchecked, updateUncheckedOptimistic] = useOptimistic(
     items.filter((item) => !item.checked),
     (items, update: OptimisticUpdate) => {
       if (update.type === "removeAll") {
         return [];
       } else if (update.type === "add") {
-        console.log(update);
         return [...items, update.item];
       } else if (update.type === "update") {
         return items.map((item) => {

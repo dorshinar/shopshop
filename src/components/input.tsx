@@ -15,7 +15,7 @@ function Input(
 
   return (
     <input
-      className={`rounded-none text-start focus:outline-none dark:border-b-slate-50 dark:bg-slate-800
+      className={`rounded-none text-start focus:outline-hidden dark:border-b-slate-50 dark:bg-slate-800
       ${fullWidth && "w-full"}
       ${textEllipsis && "text-ellipsis whitespace-pre"}
       ${border && "border-b border-b-slate-800"}

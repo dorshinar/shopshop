@@ -17,7 +17,7 @@ function InnerIconButton(
 ) {
   return (
     <button
-      className={`grid place-items-center rounded outline-1 outline-offset-2 outline-sky-600 focus-visible:outline 
+      className={`cursor-pointer grid place-items-center rounded outline-offset-2 outline-sky-600 focus-visible:outline-1 
         ${size === "large" ? `h-11 w-11 md:h-4 md:w-4` : ``} 
       `}
       ref={ref}

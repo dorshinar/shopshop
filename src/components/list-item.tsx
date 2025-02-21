@@ -103,7 +103,7 @@ export function ListItem({
 
           await updateName(formData);
         }}
-        className="grid flex-shrink-0 flex-grow basis-20 place-items-center"
+        className="grid shrink-0 grow basis-20 place-items-center"
       >
         <input type="hidden" value={item.id} name="id" />
         <Input

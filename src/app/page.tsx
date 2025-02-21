@@ -3,9 +3,10 @@ import { db } from "@/db/db";
 import { items as itemsTable } from "@/db/schema";
 import { ListsWrapper } from "@/components/lists-wrapper";
 import { Metadata } from "next";
+import { Suspense } from "react";
 
 export default async function Home() {
-  const items = await db.select().from(itemsTable);
+  const items = db.select().from(itemsTable);
 
   return (
     <>
@@ -13,13 +14,14 @@ export default async function Home() {
         <span aria-hidden="true">🛒</span> My Fucking Shopping List
       </Header>
       <main className="flex flex-col items-center justify-center py-4 px-8">
-        <ListsWrapper items={items}></ListsWrapper>
+        <Suspense fallback={<div>Loading...</div>}>
+          <ListsWrapper itemsPromise={items}></ListsWrapper>
+        </Suspense>
       </main>
     </>
   );
 }
 
-export const runtime = "edge";
 export const revalidate = 0;
 
 export const metadata: Metadata = {
