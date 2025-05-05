@@ -48,16 +48,12 @@
         "prod_items_cuid_unique": {
           "name": "prod_items_cuid_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "cuid"
-          ]
+          "columns": ["cuid"]
         },
         "prod_items_name_unique": {
           "name": "prod_items_name_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
+          "columns": ["name"]
         }
       },
       "policies": {},
