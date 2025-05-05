@@ -50,6 +50,13 @@
       "when": 1733333083392,
       "tag": "0006_minor_the_call",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1746435531311,
+      "tag": "0007_clean_wolf_cub",
+      "breakpoints": true
     }
   ]
 }

@@ -7,6 +7,9 @@ if (!process.env.POSTGRES_URL) {
 export default defineConfig({
   schema: "./src/db/schema.ts",
   out: "./src/db/migrations",
-  tablesFilter: [`${process.env.POSTGRES_PREFIX}*`],
+  // tablesFilter: [`${process.env.POSTGRES_PREFIX}*`],
   dialect: "postgresql",
+  dbCredentials: {
+    url: process.env.POSTGRES_URL,
+  },
 });
