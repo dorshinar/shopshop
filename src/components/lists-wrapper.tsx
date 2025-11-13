@@ -4,7 +4,7 @@ import { Item } from "@/db/schema";
 import { ListItem } from "./list-item";
 import { startTransition, use, useOptimistic } from "react";
 import { AddItem } from "./add-item";
-import { checkAll, restoreRecurring } from "@/api/actions";
+import { restoreRecurring } from "@/api/actions";
 import { Button } from "./button";
 import Separator from "./separator";
 
@@ -136,26 +136,6 @@ export function ListsWrapper({ itemsPromise }: Props) {
           }}
         >
           <Button>Restore recurring</Button>
-        </form>
-        <form
-          action={checkAll}
-          onSubmit={async (e) => {
-            e.preventDefault();
-
-            startTransition(() => {
-              updateUncheckedOptimistic({ type: "removeAll" });
-              unchecked.forEach((item) => {
-                updateCheckedOptimistic({
-                  item: { ...item, checked: true },
-                  type: "add",
-                });
-              });
-            });
-
-            await checkAll();
-          }}
-        >
-          <Button>Check All</Button>
         </form>
       </div>
       <Separator></Separator>

@@ -65,9 +65,3 @@ export async function restoreRecurring() {
 
   revalidatePath("/");
 }
-
-export async function checkAll() {
-  await db.update(items).set({ checked: true });
-
-  revalidatePath("/");
-}
