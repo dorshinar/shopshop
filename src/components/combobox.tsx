@@ -29,7 +29,7 @@ function ComboboxComponent(
   return (
     <ComboboxBase
       defaultValue={""}
-      onChange={(value: string | undefined) => setQuery(value ?? "")}
+      onChange={(value: string | null) => setQuery(value ?? "")}
       name={name}
     >
       <div className="relative grow">

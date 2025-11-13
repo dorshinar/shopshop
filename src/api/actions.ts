@@ -2,7 +2,7 @@
 
 import { db } from "@/db/db";
 import { items } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq, inArray, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import invariant from "tiny-invariant";
 
@@ -58,16 +58,23 @@ export async function updateName(formData: FormData) {
 }
 
 export async function restoreRecurring() {
-  await db
+  const restoredItems = await db
     .update(items)
     .set({ checked: false })
-    .where(eq(items.recurring, true));
+    .where(and(eq(items.recurring, true), eq(items.checked, true)))
+    .returning({ id: items.id });
 
   revalidatePath("/");
+  return restoredItems.map((item) => item.id);
 }
 
-export async function checkAll() {
-  await db.update(items).set({ checked: true });
+export async function undoRestoreRecurring(itemIds: string[]) {
+  if (itemIds.length === 0) return;
+
+  await db
+    .update(items)
+    .set({ checked: true })
+    .where(inArray(items.id, itemIds));
 
   revalidatePath("/");
 }

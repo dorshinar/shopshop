@@ -4,9 +4,10 @@ import { Item } from "@/db/schema";
 import { ListItem } from "./list-item";
 import { startTransition, use, useOptimistic } from "react";
 import { AddItem } from "./add-item";
-import { checkAll, restoreRecurring } from "@/api/actions";
+import { restoreRecurring, undoRestoreRecurring } from "@/api/actions";
 import { Button } from "./button";
 import Separator from "./separator";
+import { toast } from "sonner";
 
 type OptimisticUpdate =
   | { type: "removeAll" | "restore" }
@@ -116,46 +117,43 @@ export function ListsWrapper({ itemsPromise }: Props) {
       />
       <div className="flex gap-2 items-center my-4">
         <form
-          action={restoreRecurring}
           onSubmit={async (e) => {
             e.preventDefault();
+
+            const recurringItems = checked.filter((item) => item.recurring);
 
             startTransition(() => {
               updateCheckedOptimistic({ type: "restore" });
-              checked
-                .filter((item) => item.recurring)
-                .forEach((item) => {
-                  updateUncheckedOptimistic({
-                    item: { ...item, checked: false },
-                    type: "add",
-                  });
-                });
-            });
-
-            await restoreRecurring();
-          }}
-        >
-          <Button>Restore recurring</Button>
-        </form>
-        <form
-          action={checkAll}
-          onSubmit={async (e) => {
-            e.preventDefault();
-
-            startTransition(() => {
-              updateUncheckedOptimistic({ type: "removeAll" });
-              unchecked.forEach((item) => {
-                updateCheckedOptimistic({
-                  item: { ...item, checked: true },
+              recurringItems.forEach((item) => {
+                updateUncheckedOptimistic({
+                  item: { ...item, checked: false },
                   type: "add",
                 });
               });
             });
 
-            await checkAll();
+            const restoredItemIds = await restoreRecurring();
+
+            toast.success("Recurring items restored", {
+              action: {
+                label: "Undo",
+                onClick: async () => {
+                  startTransition(() => {
+                    updateUncheckedOptimistic({ type: "restore" });
+                    recurringItems.forEach((item) => {
+                      updateCheckedOptimistic({
+                        item: { ...item, checked: true },
+                        type: "add",
+                      });
+                    });
+                  });
+                  await undoRestoreRecurring(restoredItemIds);
+                },
+              },
+            });
           }}
         >
-          <Button>Check All</Button>
+          <Button>Restore recurring</Button>
         </form>
       </div>
       <Separator></Separator>
