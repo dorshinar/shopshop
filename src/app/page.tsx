@@ -6,7 +6,7 @@ import { Metadata } from "next";
 import { Suspense } from "react";
 
 export default async function Home() {
-  const items = db.select().from(itemsTable);
+  const items = db.select().from(itemsTable).orderBy(itemsTable.name);
 
   return (
     <>
