@@ -20,7 +20,6 @@ export function AddItem({ items, onItemAdded }: Props) {
       action={insertItem}
       onSubmit={async (e) => {
         e.preventDefault();
-        formRef.current?.reset();
 
         const formData = new FormData(e.currentTarget);
 
@@ -33,13 +32,15 @@ export function AddItem({ items, onItemAdded }: Props) {
           });
         });
         await insertItem(formData);
+
+        formRef.current?.reset();
       }}
       ref={formRef}
       className="mt-1 w-full"
     >
       <div className="flex items-center gap-2">
-        <span className="min-h-[2.75rem] min-w-[2.75rem] md:min-h-[1rem] md:min-w-[1rem]"></span>
-        <span className="min-h-[2.75rem] min-w-[2.75rem] md:min-h-[1rem] md:min-w-[1rem]"></span>
+        <span className="min-h-11 min-w-11 md:min-h-4 md:min-w-4"></span>
+        <span className="min-h-11 min-w-11 md:min-h-4 md:min-w-4"></span>
         <Combobox
           name="item"
           ref={inputRef}
