@@ -17,7 +17,7 @@ export default function RootLayout({
     <html lang="en" className="h-full">
       <body
         className={cn(
-          "min-h-screen bg-gradient-to-b from-slate-100 to-slate-200 font-sans antialiased h-full w-full text-slate-800 accent-sky-600 dark:from-slate-900 dark:to-slate-800 dark:text-slate-50",
+          "min-h-full h-full bg-gradient-to-b from-slate-100 to-slate-200 font-sans antialiased w-full text-slate-800 accent-sky-600 dark:from-slate-900 dark:to-slate-800 dark:text-slate-50",
           fontSans.variable,
         )}
       >

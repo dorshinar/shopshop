@@ -57,12 +57,12 @@ export function ListItem({
             item.recurring ? "non-recurring" : "recurring"
           }`}
           disabled={disabled}
-          className="group"
+          className="group p-2"
           type="submit"
         >
           <SymbolIcon
             className={cn(
-              "h-6 w-6 md:h-4 md:w-4",
+              "h-5 w-5 md:h-4 md:w-4",
               "group-data-[state='checked']:opacity-100 group-data-[state='unchecked']:opacity-50",
               "transition-opacity",
             )}
