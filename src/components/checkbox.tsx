@@ -17,10 +17,12 @@ function CheckboxComponent(
       ref={ref}
       defaultChecked={defaultChecked}
       className={cn(
-        "cursor-pointer rounded-sm md:h-4 md:w-4",
-        border ? "h-6 w-6 border" : "h-11 w-11",
+        "cursor-pointer rounded-md md:h-4 md:w-4 transition-all",
+        border ? "h-6 w-6 border-2" : "h-11 w-11",
         "outline-offset-2 outline-sky-600 focus-visible:outline-1",
-        "data-[state='checked']:border-neutral-400 dark:data-[state='checked']:border-neutral-400 data-[state='unchecked']:border-slate-800 dark:data-[state='unchecked']:border-slate-50",
+        "data-[state='checked']:bg-sky-500 data-[state='checked']:border-sky-500 data-[state='checked']:text-white",
+        "data-[state='unchecked']:border-slate-300 dark:data-[state='unchecked']:border-slate-500",
+        "hover:border-sky-400",
         className,
       )}
     >

@@ -157,8 +157,8 @@ export function ListsWrapper({ itemsPromise }: Props) {
         </form>
       </div>
       <Separator></Separator>
-      <p className="mt-2 w-full text-sm text-slate-600 dark:text-slate-300">
-        Checked items:
+      <p className="mt-3 w-full text-sm font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+        Checked items
       </p>
 
       <ul className="mt-1 w-full">

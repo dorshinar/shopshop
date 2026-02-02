@@ -13,10 +13,12 @@ export default async function Home() {
       <Header>
         <span aria-hidden="true">🛒</span> My Fucking Shopping List
       </Header>
-      <main className="flex flex-col items-center justify-center py-4 px-8">
-        <Suspense fallback={<div>Loading...</div>}>
-          <ListsWrapper itemsPromise={items}></ListsWrapper>
-        </Suspense>
+      <main className="flex flex-col items-center justify-center py-6 px-4 sm:px-8">
+        <div className="w-full max-w-2xl bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 border border-slate-200 dark:border-slate-700">
+          <Suspense fallback={<div className="text-slate-500">Loading...</div>}>
+            <ListsWrapper itemsPromise={items}></ListsWrapper>
+          </Suspense>
+        </div>
       </main>
     </>
   );
