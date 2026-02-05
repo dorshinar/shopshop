@@ -57,7 +57,7 @@ export function ListItem({
             item.recurring ? "non-recurring" : "recurring"
           }`}
           disabled={disabled}
-          className="group p-2"
+          className="group p-2 md:p-0"
           type="submit"
         >
           <SymbolIcon

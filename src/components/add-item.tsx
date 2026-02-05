@@ -31,9 +31,8 @@ export function AddItem({ items, onItemAdded }: Props) {
             recurring: false,
           });
         });
-        await insertItem(formData);
-
         formRef.current?.reset();
+        await insertItem(formData);
       }}
       ref={formRef}
       className="mt-1 w-full"

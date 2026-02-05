@@ -115,7 +115,7 @@ export function ListsWrapper({ itemsPromise }: Props) {
         items={items}
         onItemAdded={(item) => updateUncheckedOptimistic({ item, type: "add" })}
       />
-      <div className="flex gap-2 items-center my-4">
+      <div className="flex gap-2 items-center justify-center my-4">
         <form
           onSubmit={async (e) => {
             e.preventDefault();
