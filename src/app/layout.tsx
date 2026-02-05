@@ -2,17 +2,9 @@ import { cn } from "@/lib/utils";
 import "./globals.css";
 import { Inter as FontSans } from "next/font/google";
 import { Toaster } from "sonner";
-import { Metadata, Viewport } from "next";
-
-export const viewport: Viewport = {
-  viewportFit: "cover",
-};
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "black-translucent",
-  },
   title: "Shop Shop",
   description: "My private shopping cart",
   icons: {
@@ -42,7 +34,7 @@ export default function RootLayout({
     <html lang="en" className="h-full">
       <body
         className={cn(
-          "min-h-full bg-gradient-to-b bg-fixed from-slate-100 to-slate-200 font-sans antialiased w-full text-slate-800 accent-sky-600 dark:from-slate-900 dark:to-slate-800 dark:text-slate-50 pb-[env(safe-area-inset-bottom)] pt-[env(safe-area-inset-top)]",
+          "min-h-full bg-gradient-to-b bg-fixed from-slate-100 to-slate-200 font-sans antialiased w-full text-slate-800 accent-sky-600 dark:from-slate-900 dark:to-slate-800 dark:text-slate-50",
           fontSans.variable,
         )}
       >

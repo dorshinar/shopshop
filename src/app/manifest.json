@@ -3,7 +3,7 @@
   "short_name": "Shop Shop",
   "description": "My private shopping cart",
   "start_url": "/",
-  "display": "standalone",
+  "display": "browser",
   "background_color": "#f1f5f9",
   "theme_color": "#f1f5f9",
   "icons": [
