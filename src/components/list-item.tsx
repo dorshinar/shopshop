@@ -35,7 +35,7 @@ export function ListItem({
 
   return (
     <li
-      className="mt-1 flex items-center justify-end gap-2 first:mt-0"
+      className="mt-1 flex items-center justify-end gap-2 first:mt-0 p-2 -mx-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors"
       aria-hidden={disabled}
     >
       <form
@@ -57,12 +57,12 @@ export function ListItem({
             item.recurring ? "non-recurring" : "recurring"
           }`}
           disabled={disabled}
-          className="group"
+          className="group p-2 md:p-0"
           type="submit"
         >
           <SymbolIcon
             className={cn(
-              "h-6 w-6 md:h-4 md:w-4",
+              "h-5 w-5 md:h-4 md:w-4",
               "group-data-[state='checked']:opacity-100 group-data-[state='unchecked']:opacity-50",
               "transition-opacity",
             )}
