@@ -2,7 +2,6 @@ import { Header } from "@/components/header";
 import { db } from "@/db/db";
 import { items as itemsTable } from "@/db/schema";
 import { ListsWrapper } from "@/components/lists-wrapper";
-import { Metadata } from "next";
 import { Suspense } from "react";
 
 export default async function Home() {
@@ -25,19 +24,3 @@ export default async function Home() {
 }
 
 export const revalidate = 0;
-
-export const metadata: Metadata = {
-  title: "Shop Shop",
-  description: "My private shopping cart",
-  icons: {
-    icon: [
-      { url: "favicon.ico", sizes: "any" },
-      { url: "favicon.svg", type: "image/svg+xml" },
-    ],
-    apple: [
-      { url: "/apple-touch-icon-152.png", sizes: "152x152", type: "image/png" },
-      { url: "/apple-touch-icon-167.png", sizes: "167x167", type: "image/png" },
-      { url: "/apple-touch-icon-180.png", sizes: "180x180", type: "image/png" },
-    ],
-  },
-};
