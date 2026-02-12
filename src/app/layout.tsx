@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import { Metadata, Viewport } from "next";
 
 export const viewport: Viewport = {
+  viewportFit: "cover",
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#f8f9fb" },
     { media: "(prefers-color-scheme: dark)", color: "#1c2536" },
@@ -38,10 +39,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en" className="h-full bg-slate-100 dark:bg-slate-900">
       <body
         className={cn(
-          "min-h-full bg-gradient-to-b bg-fixed from-slate-100 to-slate-200 font-sans antialiased w-full text-slate-800 accent-sky-600 dark:from-slate-900 dark:to-slate-800 dark:text-slate-50",
+          "min-h-full bg-gradient-to-b bg-fixed from-slate-100 to-slate-200 font-sans antialiased w-full text-slate-800 accent-sky-600 dark:from-slate-900 dark:to-slate-800 dark:text-slate-50 pb-[env(safe-area-inset-bottom)]",
           fontSans.variable,
         )}
       >
